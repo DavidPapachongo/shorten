@@ -13,3 +13,4 @@ typing-extensions==3.10.0.0
 ua-parser==0.10.0
 user-agents==2.2.0
 whitenoise==5.2.0
+dash-table-experiments
