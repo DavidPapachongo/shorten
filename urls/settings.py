@@ -14,6 +14,16 @@ from pathlib import Path
 import os
 import dj_database_url
 
+def parse_boolean(value):
+    if value == "True":
+        return True
+    if value == "False":
+        return False
+    raise Exception('this value "{}" is not boolean, the value should be "True" or "False" '.format(value))
+        
+
+
+ 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,13 +32,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-kk=09ol^h1cm#)bi_mqtf15fts66%bq+rxow(l9k6zj(ubm5cz'
+SECRET_KEY = os.environ['SECRET_KEY']
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = parse_boolean(os.environ['DEBUG'])
 
 ALLOWED_HOSTS = [os.environ['ALLOWED_HOST']]
-
 
 # Application definition
 
@@ -82,14 +92,7 @@ WSGI_APPLICATION = 'urls.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': os.environ['PG_ENGINE'],
-        'NAME': os.environ['PG_NAME'],
-        'USER': os.environ['PG_USER'],
-        'PASSWORD': os.environ['PG_PASSWORD'],
-        'HOST': os.environ['PG_HOST'],
-        'PORT': os.environ['PG_PORT'],
-    }
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
 
 # Pass]ord validation
@@ -159,6 +162,8 @@ LOGGING = {
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+SECURE_SSL_REDIRECT = False
 
+CSRF_COOKIE_SECURE = True
 
+SESSION_COOKIE_SECURE = True
