@@ -13,8 +13,8 @@ class UrlModel(models.Model):
     
     def id_as_base62(self):
         return base62.encode(self.id)
-
-
+    
+    
     def shorten_link(self):
         return reverse("link-redirect", args=[self.id_as_base62()])
 
